@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Systems by Tiago</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0F0F14;
+      --bg2:       #15151D;
+      --bg3:       #1C1C27;
+      --border:    #2D2D3A;
+      --purple:    #7C3AED;
+      --purple-lt: #A78BFA;
+      --purple-dk: #5B21B6;
+      --white:     #F8F8FF;
+      --gray:      #94A3B8;
+      --gray-dk:   #4A5568;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      background: rgba(15,15,20,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .nav-wordmark {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--white);
+      text-transform: uppercase;
+    }
+
+    .nav-wordmark span {
+      color: var(--purple-lt);
+      font-weight: 400;
+      font-size: 11px;
+      display: block;
+      letter-spacing: 2px;
+    }
+
+    .nav-cta {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--purple-lt);
+      text-decoration: none;
+      border: 1px solid var(--purple-dk);
+      padding: 8px 18px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--purple);
+      color: var(--white);
+      border-color: var(--purple);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 40px 80px;
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--purple-lt);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--purple);
+    }
+
+    h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(32px, 5vw, 58px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 28px;
+      color: var(--white);
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--purple-lt);
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--gray);
+      max-width: 540px;
+      margin-bottom: 48px;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: var(--purple);
+      color: var(--white);
+      padding: 14px 28px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: 1px solid var(--purple);
+    }
+
+    .btn-primary:hover {
+      background: var(--purple-dk);
+      border-color: var(--purple-dk);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--gray);
+      padding: 14px 28px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      color: var(--white);
+      border-color: var(--gray-dk);
+    }
+
+    /* ── GRADIENT BLOB ── */
+    .blob {
+      position: absolute;
+      right: -100px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      border-radius: 50%;
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 100px 40px;
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--purple-lt);
+      margin-bottom: 48px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 200px;
+    }
+
+    /* ── SERVICES ── */
+    #services {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .service-card {
+      background: var(--bg2);
+      padding: 32px 28px;
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .service-card:hover {
+      background: var(--bg3);
+    }
+
+    .service-card:hover .service-icon {
+      color: var(--purple-lt);
+    }
+
+    .service-icon {
+      font-size: 22px;
+      margin-bottom: 16px;
+      color: var(--purple);
+      transition: color 0.2s;
+    }
+
+    .service-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .service-desc {
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.7;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    @media (max-width: 640px) {
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    .about-text h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 20px;
+      color: var(--white);
+    }
+
+    .about-text p {
+      font-size: 15px;
+      color: var(--gray);
+      margin-bottom: 16px;
+      line-height: 1.8;
+    }
+
+    .about-text p strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .stats {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .stat {
+      border-left: 2px solid var(--purple);
+      padding-left: 20px;
+    }
+
+    .stat-number {
+      font-family: 'Space Mono', monospace;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--purple-lt);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--gray);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── CTA ── */
+    #contact {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+    }
+
+    .cta-block {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .cta-block h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--white);
+    }
+
+    .cta-block p {
+      font-size: 16px;
+      color: var(--gray);
+      margin-bottom: 36px;
+      line-height: 1.8;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-name {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--gray-dk);
+      text-transform: uppercase;
+    }
+
+    .footer-email {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--purple-lt);
+      text-decoration: none;
+    }
+
+    .footer-email:hover { color: var(--white); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+    h1            { animation: fadeUp 0.6s 0.1s ease both; }
+    .hero-sub     { animation: fadeUp 0.6s 0.2s ease both; }
+    .hero-actions { animation: fadeUp 0.6s 0.3s ease both; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; }
+      .hero { padding: 100px 20px 60px; }
+      .section-inner { padding: 70px 20px; }
+      footer { padding: 24px 20px; flex-direction: column; text-align: center; }
+      .blob { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg class="nav-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="10" y1="10" x2="32" y2="32" stroke="#5B21B6" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="32" y1="32" x2="10" y2="32" stroke="#5B21B6" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="32" y1="10" x2="32" y2="32" stroke="#5B21B6" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="10" y1="10" x2="32" y2="10" stroke="#6D28D9" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="10" cy="10" r="4.5" fill="#7C3AED"/>
+      <circle cx="32" cy="10" r="3" fill="#6D28D9"/>
+      <circle cx="10" cy="32" r="3" fill="#6D28D9"/>
+      <circle cx="32" cy="32" r="5.5" fill="#A78BFA"/>
+      <circle cx="21" cy="21" r="2" fill="#A78BFA" opacity="0.5"/>
+    </svg>
+    <div class="nav-wordmark">
+      Systems
+      <span>by Tiago</span>
+    </div>
+  </a>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSdfuCBGXAGVUxzt_A1vslzUji2uBzVWDdI7kDiiIJSbwY-uQg/viewform?usp=dialog" target="_blank" class="nav-cta">Work With Me</a>
+</nav>
+
+<!-- HERO -->
+<div style="position:relative; overflow:hidden;">
+  <section class="hero">
+    <div class="hero-eyebrow">Google Workspace · Apps Script · Internal Tools</div>
+    <h1>Systems built for<br/><em>real teams.</em></h1>
+    <p class="hero-sub">I build lightweight, maintainable internal tools and automations on Google Workspace — no bloated SaaS, no unnecessary overhead. Just clean systems that work.</p>
+    <div class="hero-actions">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdfuCBGXAGVUxzt_A1vslzUji2uBzVWDdI7kDiiIJSbwY-uQg/viewform?usp=dialog" target="_blank" class="btn-primary">Start a Project</a>
+      <a href="#services" class="btn-secondary">See What I Do</a>
+    </div>
+  </section>
+  <div class="blob"></div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-inner">
+    <div class="section-label">Services</div>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <div class="service-icon">⚙️</div>
+        <div class="service-title">Google Workspace Automation</div>
+        <p class="service-desc">Forms, Sheets, and Apps Script workflows that eliminate manual work — reporting, routing, notifications, and data pipelines.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🗂️</div>
+        <div class="service-title">Internal Tools & Dashboards</div>
+        <p class="service-desc">Custom-built operational tools — ticketing systems, trackers, intake forms, and admin panels — all inside your Google ecosystem.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🌐</div>
+        <div class="service-title">Business Website Setup</div>
+        <p class="service-desc">Clean, fast, functional websites for small businesses. No bloat, no monthly platform fees — just a site that does its job.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">📬</div>
+        <div class="service-title">Email & Process Automation</div>
+        <p class="service-desc">Automated email threading, notifications, SLA tracking, and scheduled reporting — built to run without babysitting.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">📄</div>
+        <div class="service-title">Documentation & Handoff</div>
+        <p class="service-desc">SOPs, system docs, and training materials written clearly enough that anyone on your team can pick it up and run.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🔗</div>
+        <div class="service-title">System Integration</div>
+        <p class="service-desc">Connect your existing tools — forms to sheets, sheets to email, data to dashboards — so your stack actually works together.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label">About</div>
+    <div class="about-grid">
+      <div class="about-text">
+        <h2>14+ years building systems that actually get used.</h2>
+        <p>I'm Tiago — a Technical Project Manager and Internal Systems Architect based in Draper, UT. My background is in mortgage operations, compliance, and software delivery.</p>
+        <p>I specialize in <strong>replacing expensive SaaS tools</strong> with lightweight, maintainable internal systems built on Google Workspace. No overcomplicated stack, no vendor lock-in.</p>
+        <p>My build philosophy: <strong>practical over flashy, maintainable over clever, additive over rewrites.</strong></p>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number">14+</div>
+          <div class="stat-label">Years in operations & systems</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">16+</div>
+          <div class="stat-label">Internal tools built & deployed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">$0</div>
+          <div class="stat-label">Added SaaS cost for clients where possible</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">Fast</div>
+          <div class="stat-label">Turnaround on small-to-mid projects</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="cta-block">
+      <h2>Got a system that needs fixing?</h2>
+      <p>Tell me what you're working with and what's broken or missing. I'll give you a straight answer on whether I can help and what it'll take.</p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdfuCBGXAGVUxzt_A1vslzUji2uBzVWDdI7kDiiIJSbwY-uQg/viewform?usp=dialog" target="_blank" class="btn-primary">Fill Out the Project Form</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-name">© 2026 Systems by Tiago</span>
+  <a href="mailto:systemsbytiago@gmail.com" class="footer-email">systemsbytiago@gmail.com</a>
+</footer>
+
+</body>
+</html>
